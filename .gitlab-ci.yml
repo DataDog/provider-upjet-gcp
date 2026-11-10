@@ -46,7 +46,7 @@ build_provider:
       echo "Base image: ${BASE_IMAGE}"
 
       # Create custom Dockerfile
-      cat > /tmp/Dockerfile << EOF
+      cat > /tmp/Dockerfile.provider << EOF
       FROM ${BASE_IMAGE}
 
       ARG TARGETOS
@@ -62,7 +62,7 @@ build_provider:
       EOF
 
       # Build using existing make system
-      BUILD_ARGS="--file /tmp/Dockerfile" \
+      BUILD_ARGS="--file /tmp/Dockerfile.provider --label target=staging" \
       XPKG_REG_ORGS_NO_PROMOTE="" \
       XPKG_REG_ORGS="$REG" \
       REGISTRY_ORGS="$REG" \
