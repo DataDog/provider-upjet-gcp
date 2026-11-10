@@ -3,12 +3,12 @@ default:
   image: registry.ddbuild.io/images/nydus:v2.3.7
 
 variables:
-  BASE_IMAGE: "registry.ddbuild.io/images/base/gbi-distroless-nossl-root-fips:release"
+  BASE_IMAGE: "registry.ddbuild.io/images/base/gbi-distroless-root:release"
 
 stages:
   - build
 
-build_fips:
+build_provider:
   stage: build
   variables:
     KUBERNETES_CPU_REQUEST: "8"
@@ -45,8 +45,8 @@ build_fips:
       echo "Registry: ${REG}"
       echo "Base image: ${BASE_IMAGE}"
 
-      # Create custom Dockerfile with FIPS support
-      cat > /tmp/Dockerfile.fips << EOF
+      # Create custom Dockerfile
+      cat > /tmp/Dockerfile << EOF
       FROM ${BASE_IMAGE}
 
       ARG TARGETOS
@@ -61,8 +61,8 @@ build_fips:
       ENTRYPOINT ["provider"]
       EOF
 
-      # Build using existing make system with FIPS
-      BUILD_ARGS="--file /tmp/Dockerfile.fips" \
+      # Build using existing make system
+      BUILD_ARGS="--file /tmp/Dockerfile" \
       XPKG_REG_ORGS_NO_PROMOTE="" \
       XPKG_REG_ORGS="$REG" \
       REGISTRY_ORGS="$REG" \
